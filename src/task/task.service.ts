@@ -1,26 +1,45 @@
-import { Injectable } from '@nestjs/common';
-import { CreateTaskInput } from './dto/create-task.input';
-import { UpdateTaskInput } from './dto/update-task.input';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateTaskInput, UpdateTaskInput } from './dto/inputs';
+import { Task } from './entities/task.entity';
+import { Not, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TaskService {
-  create(createTaskInput: CreateTaskInput) {
-    return 'This action adds a new task';
+  
+  constructor(
+    @InjectRepository(Task)
+    private readonly taskRepository: Repository<Task> 
+  ){}
+
+  async create(createTaskInput: CreateTaskInput) : Promise<Task>{
+    const newTask = this.taskRepository.create(createTaskInput)
+    return await this.taskRepository.save(newTask)
   }
 
-  findAll() {
-    return [];
+  findAll() : Promise<Task[]> {
+    //TODO pagination
+    return this.taskRepository.find()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
+  async findOne(id: string) : Promise<Task> {
+    const task = await this.taskRepository.findOne({ where: { id } });
+    if (!task) throw new NotFoundException(`Task with id ${id} not found`);
+
+    return task;
   }
 
-  update(id: number, updateTaskInput: UpdateTaskInput) {
-    return `This action updates a #${id} task`;
+  async update(id: string, updateTaskInput: UpdateTaskInput) : Promise<Task> {
+    const task = await this.taskRepository.preload(updateTaskInput)
+    if (!task) throw new NotFoundException(`Task with id ${id} not found`);
+
+    return this.taskRepository.save(task)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} task`;
+  async remove(id: string) {
+    //Soft delete and check integrity referential
+    const item = await this.findOne(id)
+    await this.taskRepository.remove(item)
+    return {...item, id}
   }
 }
