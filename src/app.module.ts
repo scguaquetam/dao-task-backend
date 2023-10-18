@@ -7,6 +7,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApolloServerPlugin } from '@apollo/server';
 import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default';
 import { TaskModule } from './task/task.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -30,6 +32,8 @@ import { TaskModule } from './task/task.module';
       autoLoadEntities: true,
     }),
     TaskModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
