@@ -16,7 +16,7 @@ export class User {
 
   @Column({unique: true})
   @Field(() => String)
-  nickName: string;
+  nickname: string;
 
   @Column({
     type: 'text',
