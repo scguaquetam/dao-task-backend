@@ -23,7 +23,6 @@ export class AuthService {
         user
       }
     } catch (error) {
-      console.log('final error is ',error);
       throw error;
     }
     
@@ -40,7 +39,6 @@ export class AuthService {
         user
       }
     } catch (error) {
-      console.log('final error is ',error);
       throw error;
     }
   }
@@ -55,7 +53,6 @@ export class AuthService {
         user
       }
     } catch (error) {
-      console.log('final error is ',error);
       throw error;
     }
   }
