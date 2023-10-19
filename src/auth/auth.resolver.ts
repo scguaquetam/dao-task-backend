@@ -14,12 +14,6 @@ export class AuthResolver {
   ): Promise<AuthResponse> {
     return await this.authService.signUp(signUpInput);
   }
-  @Mutation(() => AuthResponse, { name: 'loginOrSignUp' })
-  async loginOrSignUp(
-    @Args('signUpInput') signUpInput: SignUpInput
-  ): Promise<AuthResponse> {
-    return await this.authService.loginOrSignUp(signUpInput);
-  }
   @Mutation(() => AuthResponse, { name: 'login' })
   async login(
     @Args('loginInput') loginInput: LoginInput

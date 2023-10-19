@@ -17,19 +17,23 @@ export class UsersService {
 
   async create(signUpInput: SignUpInput): Promise<User> {
     try {
+      console.log('nickname is ', signUpInput.nickname, signUpInput.address);
+
       const existingUser = await this.userRepository.findOne({
         where: { nickName: signUpInput.nickname },
       });
       if (existingUser) {
         throw new Error('NickName already in use.');
       }
-
+      console.log('existing user is ', existingUser);
+      
       const existingAddress = await this.userRepository.findOne({
         where: {address: signUpInput.address},
       });
       if (existingAddress) {
         throw new Error('Address already in use.');
       }
+      console.log('existing address is ', existingAddress);
 
       const newUser = this.userRepository.create(signUpInput);
       return await this.userRepository.save(newUser);
@@ -61,6 +65,7 @@ export class UsersService {
     throw new Error('block Method not implemented.');
   }
   private handleDBError(error: any) : never {
+    console.error(error); 
     if (error.code === '23505') {
       throw new ConflictException('Address already in use.');
     } else {

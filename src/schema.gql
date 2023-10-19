@@ -44,7 +44,6 @@ type Mutation {
   removeTask(id: ID!): Task!
   blockUser(id: ID!): User!
   signUp(signUpInput: SignUpInput!): AuthResponse!
-  loginOrSignUp(signUpInput: SignUpInput!): AuthResponse!
   login(loginInput: LoginInput!): AuthResponse!
 }
 
