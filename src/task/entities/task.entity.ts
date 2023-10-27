@@ -1,5 +1,6 @@
 import { ObjectType, Field, Int, ID, Float } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
+import { Column, Entity, Index, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'tasks'})
 @ObjectType()
@@ -35,4 +36,11 @@ export class Task {
   @Column({nullable: true})
   @Field(() => String, { nullable: true})
   depending?: string;
+
+  // @OneToMany(() => User, (user) => user.tasks, {nullable: true})
+  // @Index('userId-index')
+  // @Field(() => [User], {nullable: true})
+  // users?: User[];
+
+
 }

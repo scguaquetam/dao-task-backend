@@ -24,6 +24,7 @@ type User {
   nickname: String!
   roles: [String!]!
   isActive: Boolean!
+  lastUpdateBy: User
 }
 
 type AuthResponse {
@@ -34,8 +35,16 @@ type AuthResponse {
 type Query {
   tasks: [Task!]!
   task(id: ID!): Task!
-  users: [User!]!
+  users(roles: [ValidRoles!] = []): [User!]!
   user(id: ID!): User!
+  reValidate: AuthResponse!
+}
+
+"""Valid roles for users when login"""
+enum ValidRoles {
+  admin
+  user
+  superUser
 }
 
 type Mutation {
@@ -43,6 +52,7 @@ type Mutation {
   updateTask(updateTaskInput: UpdateTaskInput!): Task!
   removeTask(id: ID!): Task!
   blockUser(id: ID!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
   signUp(signUpInput: SignUpInput!): AuthResponse!
   login(loginInput: LoginInput!): AuthResponse!
 }
@@ -66,6 +76,14 @@ input UpdateTaskInput {
   createdAt: DateTime
   depending: String
   id: ID!
+}
+
+input UpdateUserInput {
+  address: String
+  nickname: String
+  id: ID!
+  roles: [ValidRoles!]
+  isActive: Boolean
 }
 
 input SignUpInput {

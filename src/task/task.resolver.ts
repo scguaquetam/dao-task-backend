@@ -1,18 +1,24 @@
 import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
+import { ParseUUIDPipe, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+
+import { User } from 'src/users/entities/user.entity';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { TaskService } from './task.service';
 import { Task } from './entities/task.entity';
 import { CreateTaskInput, UpdateTaskInput } from './dto/inputs';
-import { ParseUUIDPipe } from '@nestjs/common';
 
 @Resolver(() => Task)
+@UseGuards(JwtAuthGuard)
 export class TaskResolver {
   constructor(private readonly taskService: TaskService) {}
 
-  @Mutation(() => Task)
+  @Mutation(() => Task, { name: 'createTask' })
   async createTask
-    (@Args('createTaskInput') createTaskInput: CreateTaskInput
+    (@Args('createTaskInput') createTaskInput: CreateTaskInput,
+    @CurrentUser() user: User
   ) : Promise<Task> {
-    return this.taskService.create(createTaskInput);
+    return this.taskService.create(createTaskInput, user);
   }
 
   @Query(() => [Task], { name: 'tasks' })
