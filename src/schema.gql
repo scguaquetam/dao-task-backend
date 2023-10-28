@@ -6,9 +6,8 @@ type Task {
   id: ID!
   title: String!
   description: String!
-  status: String
+  status: String!
   value: Float!
-  owner: String
   createdAt: DateTime!
   depending: String
 }
@@ -18,13 +17,33 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Epoch {
+  id: ID!
+  duration: Float!
+  startDate: Float!
+  endDate: Float!
+  description: String!
+  organization: Organization!
+}
+
+type Organization {
+  id: ID!
+  name: String!
+  description: String!
+  img: String
+  users: [User!]!
+  epochs: [Epoch!]
+}
+
 type User {
   id: ID!
   address: String!
   nickname: String!
+  primaryRol: String
   roles: [String!]!
   isActive: Boolean!
   lastUpdateBy: User
+  organizations: [Organization!]!
 }
 
 type AuthResponse {
@@ -38,6 +57,10 @@ type Query {
   users(roles: [ValidRoles!] = []): [User!]!
   user(id: ID!): User!
   reValidate: AuthResponse!
+  organization(id: Int!): Organization!
+  organizationsByUser: [Organization!]!
+  epochs: [Epoch!]!
+  epoch(id: Int!): Epoch!
 }
 
 """Valid roles for users when login"""
@@ -55,6 +78,12 @@ type Mutation {
   updateUser(updateUserInput: UpdateUserInput!): User!
   signUp(signUpInput: SignUpInput!): AuthResponse!
   login(loginInput: LoginInput!): AuthResponse!
+  updateOrganization(updateOrganizationInput: UpdateOrganizationInput!): Organization!
+  removeOrganization(id: Int!): Organization!
+  createOrganization(createOrganizationInput: CreateOrganizationInput!): Organization!
+  createEpoch(createEpochInput: CreateEpochInput!): Epoch!
+  updateEpoch(updateEpochInput: UpdateEpochInput!): Epoch!
+  removeEpoch(id: Int!): Epoch!
 }
 
 input CreateTaskInput {
@@ -62,7 +91,6 @@ input CreateTaskInput {
   description: String!
   status: String
   value: Float!
-  owner: String
   createdAt: DateTime!
   depending: String
 }
@@ -72,7 +100,6 @@ input UpdateTaskInput {
   description: String
   status: String
   value: Float
-  owner: String
   createdAt: DateTime
   depending: String
   id: ID!
@@ -84,6 +111,13 @@ input UpdateUserInput {
   id: ID!
   roles: [ValidRoles!]
   isActive: Boolean
+  primaryRol: ValidPrimaryRol
+}
+
+"""Valid roles for users to pick when login"""
+enum ValidPrimaryRol {
+  daoManager
+  daoContributor
 }
 
 input SignUpInput {
@@ -93,4 +127,28 @@ input SignUpInput {
 
 input LoginInput {
   address: String!
+}
+
+input UpdateOrganizationInput {
+  name: String
+  description: String
+  img: String
+  id: Int!
+}
+
+input CreateOrganizationInput {
+  name: String!
+  description: String
+  img: String
+}
+
+input CreateEpochInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateEpochInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }

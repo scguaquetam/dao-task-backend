@@ -17,17 +17,13 @@ export class Task {
   @Field(() => String)
   description: string;
 
-  @Column({ nullable: true})
-  @Field(() => String, { nullable: true})
-  status?: string;
+  @Column()
+  @Field(() => String)
+  status: string;
 
   @Column()
   @Field(() => Float)
   value: number;
-
-  @Column({ nullable: true})
-  @Field(() => String, { nullable: true})
-  owner?: string;
 
   @Column()
   @Field(() => Date)

@@ -32,6 +32,7 @@ export class UsersService {
       if (existingAddress) {
         throw new Error('Address is already in use.');
       }
+      
       const newUser = this.userRepository.create(signUpInput);
       return await this.userRepository.save(newUser);
     } catch (error) {

@@ -12,5 +12,5 @@ export class SignUpInput {
   @IsNotEmpty()
   @MinLength(3)
   nickname: string;
-
+  
 }

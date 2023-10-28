@@ -9,6 +9,8 @@ import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPag
 import { TaskModule } from './task/task.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { OrganizationModule } from './organization/organization.module';
+import { EpochsModule } from './epochs/epochs.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -34,6 +36,8 @@ import { AuthModule } from './auth/auth.module';
     TaskModule,
     UsersModule,
     AuthModule,
+    OrganizationModule,
+    EpochsModule,
   ],
   controllers: [],
   providers: [],

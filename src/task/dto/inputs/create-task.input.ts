@@ -1,6 +1,7 @@
 import { InputType, Int, Field, Float } from '@nestjs/graphql';
 import { IsDate, IsNotEmpty, IsOptional, IsPositive, IsString, Min } from 'class-validator';
 import { isNullableType } from 'graphql';
+import { User } from 'src/users/entities/user.entity';
 
 @InputType()
 export class CreateTaskInput {
@@ -22,10 +23,6 @@ export class CreateTaskInput {
   @IsNotEmpty()
   @Min(0)
   value: number;
-
-  @Field(() => String,{ nullable: true})
-  @IsOptional()
-  owner?: string;
 
   @Field(() => Date)
   @IsDate()
