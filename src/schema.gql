@@ -2,7 +2,7 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Task {
+type BaseTask {
   id: ID!
   title: String!
   description: String!
@@ -10,30 +10,13 @@ type Task {
   value: Float!
   createdAt: DateTime!
   depending: String
+  organization: Organization!
 }
 
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
-
-type Epoch {
-  id: ID!
-  duration: Float!
-  startDate: Float!
-  endDate: Float!
-  description: String!
-  organization: Organization!
-}
-
-type Organization {
-  id: ID!
-  name: String!
-  description: String!
-  img: String
-  users: [User!]!
-  epochs: [Epoch!]
-}
 
 type User {
   id: ID!
@@ -43,7 +26,46 @@ type User {
   roles: [String!]!
   isActive: Boolean!
   lastUpdateBy: User
-  organizations: [Organization!]!
+  organizations: [OrganizationUser!]!
+}
+
+type OrganizationUser {
+  id: ID!
+  role: String!
+}
+
+type Organization {
+  id: ID!
+  name: String!
+  description: String!
+  moderatorsNumber: Float!
+  img: String
+  fieldsBase: [String!]!
+  OrganizationUsers: [OrganizationUser!]!
+  epochs: [Epoch!]
+  baseTasks: [BaseTask!]
+}
+
+type Epoch {
+  id: ID!
+  duration: Float!
+  startDate: Float!
+  endDate: Float!
+  isActive: Boolean!
+  description: String!
+  organization: Organization!
+  tasks: [Task!]!
+}
+
+type Task {
+  id: ID!
+  title: String!
+  description: String!
+  status: String!
+  value: Float!
+  createdAt: DateTime!
+  depending: String
+  epochs: [Epoch!]!
 }
 
 type AuthResponse {
@@ -57,10 +79,13 @@ type Query {
   users(roles: [ValidRoles!] = []): [User!]!
   user(id: ID!): User!
   reValidate: AuthResponse!
-  organization(id: Int!): Organization!
-  organizationsByUser: [Organization!]!
+  findAllOrgs: [Organization!]!
+  findOrganization(id: ID!): Organization!
+  organizationOfUser: [Organization!]!
   epochs: [Epoch!]!
   epoch(id: Int!): Epoch!
+  baseTasks: [BaseTask!]!
+  baseTask(id: Int!): BaseTask!
 }
 
 """Valid roles for users when login"""
@@ -84,6 +109,9 @@ type Mutation {
   createEpoch(createEpochInput: CreateEpochInput!): Epoch!
   updateEpoch(updateEpochInput: UpdateEpochInput!): Epoch!
   removeEpoch(id: Int!): Epoch!
+  createBaseTask(createBaseTaskInput: CreateBaseTaskInput!): BaseTask!
+  updateBaseTask(updateBaseTaskInput: UpdateBaseTaskInput!): BaseTask!
+  removeBaseTask(id: Int!): BaseTask!
 }
 
 input CreateTaskInput {
@@ -148,6 +176,17 @@ input CreateEpochInput {
 }
 
 input UpdateEpochInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateBaseTaskInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateBaseTaskInput {
   """Example field (placeholder)"""
   exampleField: Int
   id: Int!

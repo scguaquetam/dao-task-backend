@@ -1,4 +1,5 @@
 import { ObjectType, Field, Int, ID, Float } from '@nestjs/graphql';
+import { Epoch } from 'src/epochs/entities/epoch.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, Index, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -32,6 +33,10 @@ export class Task {
   @Column({nullable: true})
   @Field(() => String, { nullable: true})
   depending?: string;
+
+  @ManyToMany(() => Epoch, (epoch) => epoch.tasks, { lazy: true })
+  @Field(() => [Epoch])
+  epochs: Epoch[];
 
   // @OneToMany(() => User, (user) => user.tasks, {nullable: true})
   // @Index('userId-index')

@@ -1,5 +1,7 @@
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
+import { BaseTask } from 'src/base-tasks/entities/base-task.entity';
 import { Epoch } from 'src/epochs/entities/epoch.entity';
+import { OrganizationUser } from 'src/organization-user/entities/organization-user.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
@@ -8,7 +10,14 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-
+export const fieldsBaseTransformer = {
+  to(value: string[]): string {
+    return JSON.stringify(value);
+  },
+  from(value: string): string[] {
+    return JSON.parse(value);
+  },
+};
 @Entity({ name: 'organizations' })
 @ObjectType()
 export class Organization {
@@ -24,13 +33,27 @@ export class Organization {
   @Field(() => String)
   description: string;
 
-  @Column({nullable: true})
-  @Field(() => String, { nullable: true})
+  @Column()
+  @Field(() => Number)
+  moderatorsNumber: number;
+
+  @Column({ nullable: true })
+  @Field(() => String, { nullable: true })
   img?: string;
 
-  @ManyToMany(() => User, (user) => user.organizations, { lazy: true })
-  @Field(() => [User])
-  users: User[];
+  @Column({
+    type: 'text',
+    default: JSON.stringify(['General']),
+    transformer: fieldsBaseTransformer,
+  })
+  @Field(() => [String])
+  fieldsBase: string[];
+
+  @OneToMany(() => OrganizationUser, (orgUser) => orgUser.organization, {
+    lazy: true,
+  })
+  @Field(() => [OrganizationUser])
+  OrganizationUsers: OrganizationUser[];
 
   @OneToMany(() => Epoch, (epoch) => epoch.organization, {
     nullable: true,
@@ -38,4 +61,10 @@ export class Organization {
   })
   @Field(() => [Epoch], { nullable: true })
   epochs?: Epoch[];
+
+  @OneToMany(() => BaseTask, (baseTask) => baseTask.organization, {
+    lazy: true,
+  })
+  @Field(() => [BaseTask], { nullable: true })
+  baseTasks?: BaseTask[];
 }

@@ -5,29 +5,47 @@ import { User } from 'src/users/entities/user.entity';
 import { Organization } from './entities/organization.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { OrganizationUserService } from 'src/organization-user/organization-user.service'
 
 @Injectable()
 export class OrganizationService {
   constructor(
     @InjectRepository(Organization)
     private readonly orgRepository: Repository<Organization>,
+    private readonly OrganizationUserService : OrganizationUserService
   ) {}
-
   async create(
     createOrganizationInput: CreateOrganizationInput,
     user: User,
   ): Promise<Organization> {
     const newOrg = this.orgRepository.create(createOrganizationInput);
-    newOrg.users = [user];
-    return await this.orgRepository.save(newOrg);
+    newOrg.moderatorsNumber = 1;
+    const savedOrg = await this.orgRepository.save(newOrg);
+    const newOrgUser = await this.OrganizationUserService.create(
+      {role: 'admin'},
+      user,
+      savedOrg
+    );
+    console.log(newOrgUser);
+    
+    return savedOrg
   }
 
-  findAll() {
-    return `This action returns all organization`;
+  async findAll() : Promise<Organization[]> {
+    return await this.orgRepository.find();
   }
 
   findOne(id: number) {
     return `This action returns a #${id} organization`;
+  }
+
+  async findOneByIdAndUser(id: string, user: User): Promise<Organization | undefined> {
+    return await this.orgRepository
+      .createQueryBuilder('organization')
+      .innerJoin('organization.users', 'user')
+      .where('organization.id = :orgId', { orgId: id })
+      .andWhere('user.id = :userId', { userId: user.id })
+      .getOne();
   }
 
   update(id: number, updateOrganizationInput: UpdateOrganizationInput) {

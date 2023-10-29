@@ -11,6 +11,8 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { OrganizationModule } from './organization/organization.module';
 import { EpochsModule } from './epochs/epochs.module';
+import { BaseTasksModule } from './base-tasks/base-tasks.module';
+import { OrganizationUserModule } from './organization-user/organization-user.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -38,6 +40,8 @@ import { EpochsModule } from './epochs/epochs.module';
     AuthModule,
     OrganizationModule,
     EpochsModule,
+    BaseTasksModule,
+    OrganizationUserModule,
   ],
   controllers: [],
   providers: [],
