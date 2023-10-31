@@ -23,6 +23,8 @@ export class OrganizationResolver {
     @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
     @CurrentUser() user: User,
   ) {
+    console.log(user);
+    
     const organization = await this.organizationService.findOneByIdAndUser(
       id,
       user,

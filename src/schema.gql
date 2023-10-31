@@ -31,6 +31,7 @@ type User {
 
 type OrganizationUser {
   id: ID!
+  nickname: String!
   role: String!
 }
 
@@ -41,7 +42,7 @@ type Organization {
   moderatorsNumber: Float!
   img: String
   fieldsBase: [String!]!
-  OrganizationUsers: [OrganizationUser!]!
+  organizationUsers: [OrganizationUser!]!
   epochs: [Epoch!]
   baseTasks: [BaseTask!]
 }
@@ -62,6 +63,7 @@ type Task {
   title: String!
   description: String!
   status: String!
+  category: String!
   value: Float!
   createdAt: DateTime!
   depending: String

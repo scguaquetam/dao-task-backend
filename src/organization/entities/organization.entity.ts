@@ -53,7 +53,7 @@ export class Organization {
     lazy: true,
   })
   @Field(() => [OrganizationUser])
-  OrganizationUsers: OrganizationUser[];
+  organizationUsers: OrganizationUser[];
 
   @OneToMany(() => Epoch, (epoch) => epoch.organization, {
     nullable: true,

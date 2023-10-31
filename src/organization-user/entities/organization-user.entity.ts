@@ -20,5 +20,9 @@ export class OrganizationUser {
 
   @Column()
   @Field(() => String)
+  nickname: string;
+
+  @Column()
+  @Field(() => String)
   role: string;
 }

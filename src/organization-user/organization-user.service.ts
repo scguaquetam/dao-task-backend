@@ -17,12 +17,12 @@ export class OrganizationUserService {
   async create(
     createOrganizationUserInput: CreateOrganizationUserInput,
     user : User,
-    organization : Organization
+    organization : Organization,
   ): Promise<OrganizationUser> {
     const newOrgUser = this.orgUserRepository.create({
       ...createOrganizationUserInput,
       user,
-      organization
+      organization,
     });
     return await this.orgUserRepository.save(newOrgUser);
   }

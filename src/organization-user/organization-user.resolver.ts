@@ -1,8 +1,6 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { OrganizationUserService } from './organization-user.service';
 import { OrganizationUser } from './entities/organization-user.entity';
-import { CreateOrganizationUserInput } from './dto/create-organization-user.input';
-import { UpdateOrganizationUserInput } from './dto/update-organization-user.input';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Organization } from 'src/organization/entities/organization.entity';

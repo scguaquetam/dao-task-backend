@@ -6,4 +6,8 @@ export class CreateOrganizationUserInput {
   @Field(() => String)
   @IsNotEmpty()
   role: string;
+
+  @Field(() => String)
+  @IsNotEmpty()
+  nickname: string;
 }

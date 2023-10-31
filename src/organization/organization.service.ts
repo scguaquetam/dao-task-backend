@@ -12,7 +12,7 @@ export class OrganizationService {
   constructor(
     @InjectRepository(Organization)
     private readonly orgRepository: Repository<Organization>,
-    private readonly OrganizationUserService : OrganizationUserService
+    private readonly organizationUserService : OrganizationUserService
   ) {}
   async create(
     createOrganizationInput: CreateOrganizationInput,
@@ -21,10 +21,10 @@ export class OrganizationService {
     const newOrg = this.orgRepository.create(createOrganizationInput);
     newOrg.moderatorsNumber = 1;
     const savedOrg = await this.orgRepository.save(newOrg);
-    const newOrgUser = await this.OrganizationUserService.create(
-      {role: 'admin'},
+    const newOrgUser = await this.organizationUserService.create(
+      {role: 'admin', nickname: user.nickname},
       user,
-      savedOrg
+      savedOrg,
     );
     console.log(newOrgUser);
     
@@ -42,7 +42,8 @@ export class OrganizationService {
   async findOneByIdAndUser(id: string, user: User): Promise<Organization | undefined> {
     return await this.orgRepository
       .createQueryBuilder('organization')
-      .innerJoin('organization.users', 'user')
+      .innerJoin('organization.organizationUsers', 'orgUser') // Join con OrganizationUser primero
+      .innerJoin('orgUser.user', 'user') // Luego unir con User a través de OrganizationUser
       .where('organization.id = :orgId', { orgId: id })
       .andWhere('user.id = :userId', { userId: user.id })
       .getOne();

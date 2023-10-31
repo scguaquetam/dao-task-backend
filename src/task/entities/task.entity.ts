@@ -23,6 +23,10 @@ export class Task {
   status: string;
 
   @Column()
+  @Field(() => String)
+  category: string;
+
+  @Column()
   @Field(() => Float)
   value: number;
 
