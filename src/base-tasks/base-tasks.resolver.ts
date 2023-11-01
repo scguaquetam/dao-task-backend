@@ -9,8 +9,10 @@ export class BaseTasksResolver {
   constructor(private readonly baseTasksService: BaseTasksService) {}
 
   @Mutation(() => BaseTask)
-  createBaseTask(@Args('createBaseTaskInput') createBaseTaskInput: CreateBaseTaskInput) {
-    return this.baseTasksService.create(createBaseTaskInput);
+  async createBaseTask(
+    @Args('createBaseTaskInput') createBaseTaskInput: CreateBaseTaskInput,
+  ) {
+    return await this.baseTasksService.create(createBaseTaskInput);
   }
 
   @Query(() => [BaseTask], { name: 'baseTasks' })
@@ -24,8 +26,13 @@ export class BaseTasksResolver {
   }
 
   @Mutation(() => BaseTask)
-  updateBaseTask(@Args('updateBaseTaskInput') updateBaseTaskInput: UpdateBaseTaskInput) {
-    return this.baseTasksService.update(updateBaseTaskInput.id, updateBaseTaskInput);
+  updateBaseTask(
+    @Args('updateBaseTaskInput') updateBaseTaskInput: UpdateBaseTaskInput,
+  ) {
+    return this.baseTasksService.update(
+      updateBaseTaskInput.id,
+      updateBaseTaskInput,
+    );
   }
 
   @Mutation(() => BaseTask)

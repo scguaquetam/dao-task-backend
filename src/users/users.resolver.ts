@@ -26,10 +26,9 @@ export class UsersResolver {
 
   @Query(() => User, { name: 'user' })
   findOne(
-    @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
-    @CurrentUser([ValidRoles.admin]) user: User,
+    @CurrentUser() user: User,
   ): Promise<User> {
-    return this.usersService.findOneById(id);
+    return this.usersService.findOneById(user.id);
   }
 
   @Mutation(() => User, { name: 'blockUser' })

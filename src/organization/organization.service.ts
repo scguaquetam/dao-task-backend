@@ -5,14 +5,14 @@ import { User } from 'src/users/entities/user.entity';
 import { Organization } from './entities/organization.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { OrganizationUserService } from 'src/organization-user/organization-user.service'
+import { OrganizationUserService } from 'src/organization-user/organization-user.service';
 
 @Injectable()
 export class OrganizationService {
   constructor(
     @InjectRepository(Organization)
     private readonly orgRepository: Repository<Organization>,
-    private readonly organizationUserService : OrganizationUserService
+    private readonly organizationUserService: OrganizationUserService,
   ) {}
   async create(
     createOrganizationInput: CreateOrganizationInput,
@@ -22,16 +22,16 @@ export class OrganizationService {
     newOrg.moderatorsNumber = 1;
     const savedOrg = await this.orgRepository.save(newOrg);
     const newOrgUser = await this.organizationUserService.create(
-      {role: 'admin', nickname: user.nickname},
+      { role: 'admin', nickname: user.nickname },
       user,
       savedOrg,
     );
     console.log(newOrgUser);
-    
-    return savedOrg
+
+    return savedOrg;
   }
 
-  async findAll() : Promise<Organization[]> {
+  async findAll(): Promise<Organization[]> {
     return await this.orgRepository.find();
   }
 
@@ -39,7 +39,10 @@ export class OrganizationService {
     return `This action returns a #${id} organization`;
   }
 
-  async findOneByIdAndUser(id: string, user: User): Promise<Organization | undefined> {
+  async findOneByIdAndUser(
+    id: string,
+    user: User,
+  ): Promise<Organization | undefined> {
     return await this.orgRepository
       .createQueryBuilder('organization')
       .innerJoin('organization.organizationUsers', 'orgUser') // Join con OrganizationUser primero
@@ -48,7 +51,13 @@ export class OrganizationService {
       .andWhere('user.id = :userId', { userId: user.id })
       .getOne();
   }
-
+  async findOrganizationById(id: string): Promise<Organization> {
+    try {
+      return await this.orgRepository.findOneByOrFail({id})
+    } catch (error) {
+      throw new Error(`Organization with ID ${id} not found`);
+    }
+  }
   update(id: number, updateOrganizationInput: UpdateOrganizationInput) {
     return `This action updates a #${id} organization`;
   }
@@ -57,9 +66,7 @@ export class OrganizationService {
     return `This action removes a #${id} organization`;
   }
 
-  async findByUser(
-    user: User
-  ): Promise<Organization[]> {
+  async findByUser(user: User): Promise<Organization[]> {
     return await this.orgRepository
       .createQueryBuilder('organization')
       .innerJoin('organization.users', 'user')

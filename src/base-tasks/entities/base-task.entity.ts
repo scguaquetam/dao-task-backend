@@ -1,6 +1,7 @@
 import { ObjectType, Field, Int, ID, Float } from '@nestjs/graphql';
 import { Organization } from 'src/organization/entities/organization.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { ValidTaskStatus } from '../enums/valid-taskStatus.enum';
 
 @Entity({ name: 'baseTasks' })
 @ObjectType()
@@ -17,10 +18,21 @@ export class BaseTask {
   @Field(() => String)
   description: string;
 
+  @Column({
+    type: 'text',
+    default : 'Active'
+  })
+  @Field(() => ValidTaskStatus)
+  status: ValidTaskStatus;
+
+  @Column({nullable: true})
+  @Field(() => String, { nullable: true})
+  priority?: string;
+
   @Column()
   @Field(() => String)
-  status: string;
-
+  category: string;
+  
   @Column()
   @Field(() => Float)
   value: number;

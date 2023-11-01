@@ -41,11 +41,4 @@ export class Task {
   @ManyToMany(() => Epoch, (epoch) => epoch.tasks, { lazy: true })
   @Field(() => [Epoch])
   epochs: Epoch[];
-
-  // @OneToMany(() => User, (user) => user.tasks, {nullable: true})
-  // @Index('userId-index')
-  // @Field(() => [User], {nullable: true})
-  // users?: User[];
-
-
 }

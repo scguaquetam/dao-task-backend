@@ -6,11 +6,21 @@ type BaseTask {
   id: ID!
   title: String!
   description: String!
-  status: String!
+  status: ValidTaskStatus!
+  priority: String
+  category: String!
   value: Float!
   createdAt: DateTime!
   depending: String
   organization: Organization!
+}
+
+"""Valid status for tasks"""
+enum ValidTaskStatus {
+  active
+  process
+  finished
+  paused
 }
 
 """
@@ -79,7 +89,7 @@ type Query {
   tasks: [Task!]!
   task(id: ID!): Task!
   users(roles: [ValidRoles!] = []): [User!]!
-  user(id: ID!): User!
+  user: User!
   reValidate: AuthResponse!
   findAllOrgs: [Organization!]!
   findOrganization(id: ID!): Organization!
@@ -184,12 +194,24 @@ input UpdateEpochInput {
 }
 
 input CreateBaseTaskInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  title: String!
+  description: String!
+  category: String!
+  value: Float!
+  createdAt: DateTime!
+  depending: String
+  priority: String
+  organizationId: ID!
 }
 
 input UpdateBaseTaskInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  title: String
+  description: String
+  category: String
+  value: Float
+  createdAt: DateTime
+  depending: String
+  priority: String
+  organizationId: ID
   id: Int!
 }
